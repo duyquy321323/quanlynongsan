@@ -6,7 +6,7 @@ package com.mycompany.quanlynongsan.model;
 
 /**
  *
- * @author joyboy
+ * @author nghiem
  */
 public class ProductCategory {
     Integer categoryId;
@@ -36,6 +36,4 @@ public class ProductCategory {
         this.productId = productId;
     }
 
-    
-    
 }

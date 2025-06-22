@@ -6,11 +6,12 @@ package com.mycompany.quanlynongsan.model;
 
 /**
  *
- * @author joyboy
+ * @author nghiem
  */
 public class HasLikeProduct {
     Integer userId;
     Integer productId;
+
     public HasLikeProduct() {
     }
 

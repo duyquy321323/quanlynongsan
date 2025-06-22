@@ -4,25 +4,26 @@
  */
 package com.mycompany.quanlynongsan.repository;
 
-import com.mycompany.quanlynongsan.config.DatabaseConnection;
-import com.mycompany.quanlynongsan.model.ImageProduct;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.mycompany.quanlynongsan.config.DatabaseConnection;
+import com.mycompany.quanlynongsan.model.ImageProduct;
+
 /**
  *
- * @author joyboy
+ * @author nghiem
  */
 public class ImageProductRepository {
     final private String FIND_BY_PRODUCT_ID = "SELECT * FROM IMAGE_PRODUCT ip WHERE ip.product_id = ? ";
 
     public ImageProductRepository() {
     }
-    
-     public List<ImageProduct> findByProductId(Integer productId) {
+
+    public List<ImageProduct> findByProductId(Integer productId) {
         List<ImageProduct> images = new ArrayList<>();
         try (Connection conn = DatabaseConnection.getConnection()) {
             PreparedStatement stmt = conn.prepareStatement(FIND_BY_PRODUCT_ID);
@@ -32,8 +33,7 @@ public class ImageProductRepository {
                 images.add(new ImageProduct(
                         rs.getInt("image_product_id"),
                         rs.getInt("product_id"),
-                        rs.getString("url_image")
-                ));
+                        rs.getString("url_image")));
             }
         } catch (Exception ex) {
             ex.printStackTrace();

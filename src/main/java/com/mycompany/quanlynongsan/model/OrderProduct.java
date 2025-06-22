@@ -6,7 +6,7 @@ package com.mycompany.quanlynongsan.model;
 
 /**
  *
- * @author joyboy
+ * @author nghiem
  */
 public class OrderProduct {
     Integer orderId;
@@ -45,6 +45,5 @@ public class OrderProduct {
     public void setQuantity(Integer quantity) {
         this.quantity = quantity;
     }
-    
-    
+
 }

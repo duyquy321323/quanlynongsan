@@ -8,7 +8,7 @@ import java.util.Date;
 
 /**
  *
- * @author joyboy
+ * @author nghiem
  */
 public class Otp {
     Integer otpId;
@@ -57,6 +57,5 @@ public class Otp {
     public void setCreatedDate(Date createdDate) {
         this.createdDate = createdDate;
     }
-    
-    
+
 }

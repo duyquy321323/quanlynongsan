@@ -8,7 +8,7 @@ import java.math.BigDecimal;
 
 /**
  *
- * @author joyboy
+ * @author nghiem
  */
 public class ProductRevenueReport {
     private Integer productId;
@@ -17,14 +17,16 @@ public class ProductRevenueReport {
     private Integer totalQuantitySold;
     private Integer totalDistinctOrders;
     private BigDecimal totalRevenue;
-     private String dateDisplay;  // Theo ngày
+    private String dateDisplay; // Theo ngày
     private String monthDisplay; // Theo tháng/năm
-    private int year;  
+    private int year;
 
     public ProductRevenueReport() {
     }
 
-    public ProductRevenueReport(Integer productId, String productName, BigDecimal productPrice, Integer totalQuantitySold, Integer totalDistinctOrders, BigDecimal totalRevenue, String dateDisplay, String monthDisplay, int year) {
+    public ProductRevenueReport(Integer productId, String productName, BigDecimal productPrice,
+            Integer totalQuantitySold, Integer totalDistinctOrders, BigDecimal totalRevenue, String dateDisplay,
+            String monthDisplay, int year) {
         this.productId = productId;
         this.productName = productName;
         this.productPrice = productPrice;
@@ -108,7 +110,4 @@ public class ProductRevenueReport {
         this.year = year;
     }
 
-    
-
-    
 }

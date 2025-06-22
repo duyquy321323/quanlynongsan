@@ -4,38 +4,37 @@
  */
 package com.mycompany.quanlynongsan.controller;
 
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+
 import com.mycompany.quanlynongsan.dao.CategoryDAO;
-import com.mycompany.quanlynongsan.dao.ProductDAO;
-import com.mycompany.quanlynongsan.dto.ProductDTO;
 import com.mycompany.quanlynongsan.model.Category;
-import com.mycompany.quanlynongsan.model.Product;
+
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  *
- * @author joyboy
+ * @author nghiem
  */
 
-@WebServlet(urlPatterns = {"/user/home"})
+@WebServlet(urlPatterns = { "/user/home" })
 public class HomeServlet extends HttpServlet {
-    
+
     private CategoryDAO categoryDAO = new CategoryDAO();
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-          List<Category> categories = new ArrayList<>();
+        List<Category> categories = new ArrayList<>();
         categories.add(new Category(0, "Tất cả"));
         categories.addAll(categoryDAO.findAll());
 
         req.setAttribute("categories", categories);
         req.getRequestDispatcher("/user/home.jsp").forward(req, resp);
     }
-    
+
 }

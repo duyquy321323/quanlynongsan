@@ -4,27 +4,29 @@
  */
 package com.mycompany.quanlynongsan.controller;
 
+import java.io.IOException;
+import java.util.List;
+
 import com.mycompany.quanlynongsan.model.Product;
 import com.mycompany.quanlynongsan.model.User;
 import com.mycompany.quanlynongsan.repository.ProductRepository;
+
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
-import java.io.IOException;
-import java.util.List;
 
 /**
  *
- * @author joyboy
+ * @author nghiem
  */
 @WebServlet(urlPatterns = "/secured/user/my-stock")
 public class MyStockServlet extends HttpServlet {
 
     private ProductRepository productRepository = new ProductRepository();
-    
+
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         HttpSession session = req.getSession();
@@ -33,5 +35,5 @@ public class MyStockServlet extends HttpServlet {
         req.setAttribute("products", products);
         req.getRequestDispatcher("/user/my-stock.jsp").forward(req, resp);
     }
-    
+
 }

@@ -8,7 +8,7 @@ import java.util.Date;
 
 /**
  *
- * @author joyboy
+ * @author nghiem
  */
 public class StockReport {
 

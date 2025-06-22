@@ -6,7 +6,7 @@ package com.mycompany.quanlynongsan.request;
 
 /**
  *
- * @author joyboy
+ * @author nghiem
  */
 public class RegisterRequest {
     private String email;
@@ -46,6 +46,4 @@ public class RegisterRequest {
         this.roleId = roleId;
     }
 
-    
-    
 }

@@ -6,7 +6,7 @@ package com.mycompany.quanlynongsan.response;
 
 /**
  *
- * @author joyboy
+ * @author nghiem
  */
 public class ReviewResponse {
 

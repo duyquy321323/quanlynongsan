@@ -4,8 +4,6 @@
  */
 package com.mycompany.quanlynongsan.repository;
 
-import com.mycompany.quanlynongsan.config.DatabaseConnection;
-import com.mycompany.quanlynongsan.model.OrderProduct;
 import java.sql.Connection;
 import java.sql.Date;
 import java.sql.PreparedStatement;
@@ -14,9 +12,12 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.mycompany.quanlynongsan.config.DatabaseConnection;
+import com.mycompany.quanlynongsan.model.OrderProduct;
+
 /**
  *
- * @author joyboy
+ * @author nghiem
  */
 public class OrderProductRepository {
 
@@ -31,7 +32,8 @@ public class OrderProductRepository {
 
     // Hàm lấy trung bình số sao
     public Double getAverageRateByProductId(int productId) {
-        try (Connection conn = DatabaseConnection.getConnection(); PreparedStatement stmt = conn.prepareStatement(AVG_RATE_BY_PRODUCT)) {
+        try (Connection conn = DatabaseConnection.getConnection();
+                PreparedStatement stmt = conn.prepareStatement(AVG_RATE_BY_PRODUCT)) {
 
             stmt.setInt(1, productId);
             ResultSet rs = stmt.executeQuery();
@@ -46,7 +48,8 @@ public class OrderProductRepository {
 
     // Hàm lấy số lượt đánh giá
     public int getNumberOfReviewsByProductId(int productId) {
-        try (Connection conn = DatabaseConnection.getConnection(); PreparedStatement stmt = conn.prepareStatement(COUNT_RATE_BY_PRODUCT)) {
+        try (Connection conn = DatabaseConnection.getConnection();
+                PreparedStatement stmt = conn.prepareStatement(COUNT_RATE_BY_PRODUCT)) {
 
             stmt.setInt(1, productId);
             ResultSet rs = stmt.executeQuery();
@@ -73,7 +76,8 @@ public class OrderProductRepository {
                 + "GROUP BY o.order_id, o.created_date, o.status "
                 + "ORDER BY o.created_date DESC";
 
-        try (Connection conn = DatabaseConnection.getConnection(); PreparedStatement stmt = conn.prepareStatement(sql)) {
+        try (Connection conn = DatabaseConnection.getConnection();
+                PreparedStatement stmt = conn.prepareStatement(sql)) {
 
             stmt.setInt(1, userId);
             ResultSet rs = stmt.executeQuery();
@@ -98,8 +102,7 @@ public class OrderProductRepository {
     public List<OrderSummary> getAllRelatedOrderSummariesByUserId(int userId) {
         List<OrderSummary> orders = new ArrayList<>();
 
-        String sql
-                = "SELECT o.order_id, o.created_date, o.status, "
+        String sql = "SELECT o.order_id, o.created_date, o.status, "
                 + "SUM(p.price * op.quantity) AS total_price, "
                 + "COUNT(op.product_id) AS total_products "
                 + "FROM [ORDER] o "
@@ -109,10 +112,11 @@ public class OrderProductRepository {
                 + "GROUP BY o.order_id, o.created_date, o.status "
                 + "ORDER BY o.created_date DESC";
 
-        try (Connection conn = DatabaseConnection.getConnection(); PreparedStatement stmt = conn.prepareStatement(sql)) {
+        try (Connection conn = DatabaseConnection.getConnection();
+                PreparedStatement stmt = conn.prepareStatement(sql)) {
 
-            stmt.setInt(1, userId);  // ✅ Đơn bạn đặt
-            stmt.setInt(2, userId);  // ✅ Đơn người khác đặt sản phẩm của bạn
+            stmt.setInt(1, userId); // ✅ Đơn bạn đặt
+            stmt.setInt(2, userId); // ✅ Đơn người khác đặt sản phẩm của bạn
             ResultSet rs = stmt.executeQuery();
 
             while (rs.next()) {
@@ -138,7 +142,8 @@ public class OrderProductRepository {
                 + "FROM ORDER_PRODUCT op "
                 + "WHERE op.order_id = ?";
 
-        try (Connection conn = DatabaseConnection.getConnection(); PreparedStatement stmt = conn.prepareStatement(sql)) {
+        try (Connection conn = DatabaseConnection.getConnection();
+                PreparedStatement stmt = conn.prepareStatement(sql)) {
 
             stmt.setInt(1, orderId);
             ResultSet rs = stmt.executeQuery();
@@ -176,7 +181,9 @@ public class OrderProductRepository {
             ps.setInt(1, holderId);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
-                OrderSummary os = new OrderSummary(rs.getInt("order_id"), new Date(rs.getTimestamp("created_date").getTime()), rs.getString("status"), rs.getDouble("total_price"), rs.getInt("total_products"));
+                OrderSummary os = new OrderSummary(rs.getInt("order_id"),
+                        new Date(rs.getTimestamp("created_date").getTime()), rs.getString("status"),
+                        rs.getDouble("total_price"), rs.getInt("total_products"));
                 list.add(os);
             }
         } catch (SQLException e) {
@@ -196,7 +203,8 @@ public class OrderProductRepository {
                 + "WHERE o.order_id = ? "
                 + "GROUP BY o.order_id, o.created_date, o.status";
 
-        try (Connection conn = DatabaseConnection.getConnection(); PreparedStatement stmt = conn.prepareStatement(sql)) {
+        try (Connection conn = DatabaseConnection.getConnection();
+                PreparedStatement stmt = conn.prepareStatement(sql)) {
 
             stmt.setInt(1, orderId);
             ResultSet rs = stmt.executeQuery();
@@ -224,7 +232,8 @@ public class OrderProductRepository {
         private double totalPrice;
         private int totalProducts;
 
-        public OrderSummary(int orderId, java.sql.Date createdDate, String status, double totalPrice, int totalProducts) {
+        public OrderSummary(int orderId, java.sql.Date createdDate, String status, double totalPrice,
+                int totalProducts) {
             this.orderId = orderId;
             this.createdDate = createdDate;
             this.status = status;

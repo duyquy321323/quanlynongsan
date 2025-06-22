@@ -4,18 +4,20 @@
  */
 package com.mycompany.quanlynongsan.repository;
 
-import com.mycompany.quanlynongsan.config.DatabaseConnection;
-import com.mycompany.quanlynongsan.dao.EmailService;
-import jakarta.mail.MessagingException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Random;
 
+import com.mycompany.quanlynongsan.config.DatabaseConnection;
+import com.mycompany.quanlynongsan.dao.EmailService;
+
+import jakarta.mail.MessagingException;
+
 /**
  *
- * @author joyboy
+ * @author nghiem
  */
 public class OtpRepository {
 
@@ -24,7 +26,9 @@ public class OtpRepository {
 
     public void createAndSendOtp(String email) throws SQLException {
         String otp = String.format("%06d", new Random().nextInt(999999));
-        try (Connection conn = DatabaseConnection.getConnection(); PreparedStatement ps = conn.prepareStatement("INSERT INTO OTP (email, code, created_date) VALUES (?, ?, GETDATE())")) {
+        try (Connection conn = DatabaseConnection.getConnection();
+                PreparedStatement ps = conn
+                        .prepareStatement("INSERT INTO OTP (email, code, created_date) VALUES (?, ?, GETDATE())")) {
             ps.setString(1, email);
             ps.setString(2, otp);
             ps.executeUpdate();

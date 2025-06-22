@@ -4,6 +4,9 @@
  */
 package com.mycompany.quanlynongsan.dao;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 import com.mycompany.quanlynongsan.dto.ProductDTO;
 import com.mycompany.quanlynongsan.model.Category;
 import com.mycompany.quanlynongsan.model.ImageProduct;
@@ -12,12 +15,10 @@ import com.mycompany.quanlynongsan.repository.CategoryRepository;
 import com.mycompany.quanlynongsan.repository.ImageProductRepository;
 import com.mycompany.quanlynongsan.repository.OrderProductRepository;
 import com.mycompany.quanlynongsan.repository.ProductRepository;
-import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  *
- * @author joyboy
+ * @author nghiem
  */
 public class ProductDAO {
 
@@ -31,16 +32,20 @@ public class ProductDAO {
 
     public ProductDAO() {
     }
-    
+
     public int countAll(int roleId) {
         return productRepository.countAll(roleId);
     }
-    
-    public int countSearchProducts(String name, String[] origins, Double minPrice, Double maxPrice, Integer categoryId, int roleId) {
+
+    public int countSearchProducts(String name, String[] origins, Double minPrice, Double maxPrice, Integer categoryId,
+            int roleId) {
         return productRepository.countSearchProducts(name, origins, minPrice, maxPrice, categoryId, roleId);
     }
-    public List<ProductDTO> searchProductsWithPaging(String name, String[] origins, Double minPrice, Double maxPrice, Integer categoryId, int roleId, int offset, int limit) {
-        List<Product> products = productRepository.searchProductsWithPaging(name, origins, minPrice, maxPrice, categoryId, roleId, offset, limit);
+
+    public List<ProductDTO> searchProductsWithPaging(String name, String[] origins, Double minPrice, Double maxPrice,
+            Integer categoryId, int roleId, int offset, int limit) {
+        List<Product> products = productRepository.searchProductsWithPaging(name, origins, minPrice, maxPrice,
+                categoryId, roleId, offset, limit);
         return products.stream().map(product -> {
             List<ImageProduct> imageProduct = imageProductRepository.findByProductId(product.getProductId());
             List<Category> categories = categoryRepository.findCategoriesByProductId(product.getProductId());
@@ -62,13 +67,10 @@ public class ProductDAO {
                     imageProduct.stream().map(p -> p.getUrlImage()).collect(Collectors.toList()),
                     rates,
                     reviewerQuantity,
-                    categories.stream().map(c -> c.getName()).collect(Collectors.toList())
-            );
+                    categories.stream().map(c -> c.getName()).collect(Collectors.toList()));
         }).collect(Collectors.toList());
     }
 
-
-    
     public List<ProductDTO> findAllWithPaging(int roleId, int offset, int limit) {
         List<Product> products = productRepository.findAllWithPaging(roleId, offset, limit);
         return products.stream().map(product -> {
@@ -92,12 +94,9 @@ public class ProductDAO {
                     imageProduct.stream().map(p -> p.getUrlImage()).collect(Collectors.toList()),
                     rates,
                     reviewerQuantity,
-                    categories.stream().map(c -> c.getName()).collect(Collectors.toList())
-            );
+                    categories.stream().map(c -> c.getName()).collect(Collectors.toList()));
         }).collect(Collectors.toList());
     }
-
-
 
     public List<ProductDTO> find10ByCategoryId(Integer categoryId, Integer roleId) {
         List<Product> products = productRepository.find10ByCategoryId(categoryId, roleId);
@@ -122,11 +121,10 @@ public class ProductDAO {
                     imageProduct.stream().map(p -> p.getUrlImage()).collect(Collectors.toList()),
                     rates,
                     reviewerQuantity,
-                    categories.stream().map(c -> c.getName()).collect(Collectors.toList())
-            );
+                    categories.stream().map(c -> c.getName()).collect(Collectors.toList()));
         }).collect(Collectors.toList());
     }
-    
+
     public List<ProductDTO> findAll(Integer roleId) {
         List<Product> products = productRepository.findAll(roleId);
         return products.stream().map(product -> {
@@ -150,8 +148,7 @@ public class ProductDAO {
                     imageProduct.stream().map(p -> p.getUrlImage()).collect(Collectors.toList()),
                     rates,
                     reviewerQuantity,
-                    categories.stream().map(c -> c.getName()).collect(Collectors.toList())
-            );
+                    categories.stream().map(c -> c.getName()).collect(Collectors.toList()));
         }).collect(Collectors.toList());
     }
 
@@ -178,8 +175,7 @@ public class ProductDAO {
                     imageProduct.stream().map(p -> p.getUrlImage()).collect(Collectors.toList()),
                     rates,
                     reviewerQuantity,
-                    categories.stream().map(c -> c.getName()).collect(Collectors.toList())
-            );
+                    categories.stream().map(c -> c.getName()).collect(Collectors.toList()));
         }).collect(Collectors.toList());
     }
 
@@ -208,12 +204,13 @@ public class ProductDAO {
                 imageProduct.stream().map(p -> p.getUrlImage()).collect(Collectors.toList()),
                 rates,
                 reviewerQuantity,
-                categories.stream().map(c -> c.getName()).collect(Collectors.toList())
-        );
+                categories.stream().map(c -> c.getName()).collect(Collectors.toList()));
     }
 
-    public List<ProductDTO> searchProducts(String name, String[] placeOfManufacture, Double minPrice, Double maxPrice, Integer categoryId, Integer roleId) {
-        List<Product> products = productRepository.searchProducts(name, placeOfManufacture, minPrice, maxPrice, categoryId, roleId);
+    public List<ProductDTO> searchProducts(String name, String[] placeOfManufacture, Double minPrice, Double maxPrice,
+            Integer categoryId, Integer roleId) {
+        List<Product> products = productRepository.searchProducts(name, placeOfManufacture, minPrice, maxPrice,
+                categoryId, roleId);
 
         return products.stream().map(product -> {
             List<ImageProduct> imageProduct = imageProductRepository.findByProductId(product.getProductId());
@@ -237,8 +234,7 @@ public class ProductDAO {
                     imageProduct.stream().map(p -> p.getUrlImage()).collect(Collectors.toList()),
                     rates,
                     reviewerQuantity,
-                    categories.stream().map(c -> c.getName()).collect(Collectors.toList())
-            );
+                    categories.stream().map(c -> c.getName()).collect(Collectors.toList()));
         }).collect(Collectors.toList());
     }
 }

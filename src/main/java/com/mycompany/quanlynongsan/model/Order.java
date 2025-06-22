@@ -8,7 +8,7 @@ import java.util.Date;
 
 /**
  *
- * @author joyboy
+ * @author nghiem
  */
 public class Order {
     Integer orderId;
@@ -24,7 +24,8 @@ public class Order {
     public Order() {
     }
 
-    public Order(Integer orderId, Date estimatedTime, String comment, String status, Integer rate, String paymentMethod, Integer userId, Date createdDate, Boolean isImported) {
+    public Order(Integer orderId, Date estimatedTime, String comment, String status, Integer rate, String paymentMethod,
+            Integer userId, Date createdDate, Boolean isImported) {
         this.orderId = orderId;
         this.estimatedTime = estimatedTime;
         this.comment = comment;

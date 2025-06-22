@@ -6,7 +6,7 @@ package com.mycompany.quanlynongsan.response;
 
 /**
  *
- * @author joyboy
+ * @author nghiem
  */
 import java.util.Date;
 
@@ -21,7 +21,8 @@ public class UserWithRole {
     private String roleName;
     private Date createdDate;
 
-    public UserWithRole(Integer userId, String fullName, String email, String phoneNumber, String address, Boolean isActive, Integer roleId, String roleName, Date createdDate) {
+    public UserWithRole(Integer userId, String fullName, String email, String phoneNumber, String address,
+            Boolean isActive, Integer roleId, String roleName, Date createdDate) {
         this.userId = userId;
         this.fullName = fullName;
         this.email = email;
@@ -108,5 +109,4 @@ public class UserWithRole {
         this.createdDate = createdDate;
     }
 
-    
 }

@@ -4,24 +4,25 @@
  */
 package com.mycompany.quanlynongsan.repository;
 
-import com.mycompany.quanlynongsan.config.DatabaseConnection;
-import com.mycompany.quanlynongsan.model.User;
-import com.mycompany.quanlynongsan.response.UserWithRole;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+
 import org.mindrot.jbcrypt.BCrypt;
+
+import com.mycompany.quanlynongsan.config.DatabaseConnection;
+import com.mycompany.quanlynongsan.model.User;
+import com.mycompany.quanlynongsan.response.UserWithRole;
 
 /**
  *
- * @author joyboy
+ * @author nghiem
  */
 public class UserRepository {
 
@@ -32,14 +33,15 @@ public class UserRepository {
     final private String FIND_BY_EMAIL = "SELECT * FROM [USER] WHERE email = ? AND is_active = 1";
 
     final private String FIND_BY_ID = "SELECT * FROM [USER] WHERE user_id = ? AND is_active = 1";
-    
+
     final private String FIND_BY_ID_AND_NON_IS_ACTIVE = "SELECT * FROM [USER] WHERE user_id = ?";
 
     public UserRepository() {
     }
 
     public User findById(int userId) {
-        try (Connection conn = DatabaseConnection.getConnection(); PreparedStatement stmt = conn.prepareStatement(FIND_BY_ID)) {
+        try (Connection conn = DatabaseConnection.getConnection();
+                PreparedStatement stmt = conn.prepareStatement(FIND_BY_ID)) {
 
             stmt.setInt(1, userId);
             try (ResultSet rs = stmt.executeQuery()) {
@@ -63,19 +65,20 @@ public class UserRepository {
         }
         return null;
     }
-    
+
     public void updatePassword(String email, String newPassword) throws SQLException {
         String sql = "UPDATE [USER] SET password = ? WHERE email = ?";
         try (Connection conn = DatabaseConnection.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
+                PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setString(1, BCrypt.hashpw(newPassword, BCrypt.gensalt())); // 👉 Có thể thêm hash password nếu muốn
             ps.setString(2, email);
             ps.executeUpdate();
         }
     }
-    
+
     public User findByIdAndNonIsActive(int userId) {
-        try (Connection conn = DatabaseConnection.getConnection(); PreparedStatement stmt = conn.prepareStatement(FIND_BY_ID_AND_NON_IS_ACTIVE)) {
+        try (Connection conn = DatabaseConnection.getConnection();
+                PreparedStatement stmt = conn.prepareStatement(FIND_BY_ID_AND_NON_IS_ACTIVE)) {
 
             stmt.setInt(1, userId);
             try (ResultSet rs = stmt.executeQuery()) {
@@ -141,7 +144,8 @@ public class UserRepository {
     }
 
     public User findByEmail(String email) {
-        try (Connection conn = DatabaseConnection.getConnection(); PreparedStatement stmt = conn.prepareStatement(FIND_BY_EMAIL)) {
+        try (Connection conn = DatabaseConnection.getConnection();
+                PreparedStatement stmt = conn.prepareStatement(FIND_BY_EMAIL)) {
             stmt.setString(1, email);
             try (ResultSet rs = stmt.executeQuery()) {
                 if (rs.next()) {
@@ -155,7 +159,8 @@ public class UserRepository {
                     Integer roleId = rs.getInt("role_id");
                     java.sql.Date createdDateSql = rs.getDate("created_date");
                     Date createdDate = new Date(createdDateSql.getTime());
-                    return new User(userId, fullName, emailOld, password, phoneNumber, address, isActive, roleId, createdDate);
+                    return new User(userId, fullName, emailOld, password, phoneNumber, address, isActive, roleId,
+                            createdDate);
                 }
             }
         } catch (Exception ex) {
@@ -172,7 +177,9 @@ public class UserRepository {
 
         List<UserWithRole> users = new ArrayList<>();
 
-        try (Connection conn = DatabaseConnection.getConnection(); PreparedStatement stmt = conn.prepareStatement(sql); ResultSet rs = stmt.executeQuery()) {
+        try (Connection conn = DatabaseConnection.getConnection();
+                PreparedStatement stmt = conn.prepareStatement(sql);
+                ResultSet rs = stmt.executeQuery()) {
 
             while (rs.next()) {
                 UserWithRole user = new UserWithRole();
@@ -205,7 +212,8 @@ public class UserRepository {
 
         List<UserWithRole> users = new ArrayList<>();
 
-        try (Connection conn = DatabaseConnection.getConnection(); PreparedStatement stmt = conn.prepareStatement(sql)) {
+        try (Connection conn = DatabaseConnection.getConnection();
+                PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setInt(1, roleId);
             try (ResultSet rs = stmt.executeQuery()) {
                 while (rs.next()) {

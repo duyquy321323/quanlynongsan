@@ -6,16 +6,19 @@ package com.mycompany.quanlynongsan.controller;
 
 /**
  *
- * @author joyboy
+ * @author nghiem
  */
+import java.io.IOException;
+import java.util.List;
+
 import com.mycompany.quanlynongsan.repository.BehaviorLogRepository;
 import com.mycompany.quanlynongsan.response.BehaviorLog;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
-import jakarta.servlet.http.*;
-import java.io.IOException;
-import java.util.List;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
 @WebServlet("/secured/admin/behavior-logs")
 public class BehaviorLogServlet extends HttpServlet {
@@ -31,8 +34,10 @@ public class BehaviorLogServlet extends HttpServlet {
         if (pageParam != null) {
             try {
                 page = Integer.parseInt(pageParam);
-                if (page < 1) page = 1;
-            } catch (NumberFormatException ignored) {}
+                if (page < 1)
+                    page = 1;
+            } catch (NumberFormatException ignored) {
+            }
         }
 
         BehaviorLogRepository repo = new BehaviorLogRepository();

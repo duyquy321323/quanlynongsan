@@ -8,7 +8,7 @@ import java.math.BigDecimal;
 
 /**
  *
- * @author joyboy
+ * @author nghiem
  */
 public class ItemCartResponse {
 

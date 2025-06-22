@@ -4,28 +4,30 @@
  */
 package com.mycompany.quanlynongsan.controller;
 
+import java.io.IOException;
+
 import com.mycompany.quanlynongsan.model.Behavior;
 import com.mycompany.quanlynongsan.model.User;
 import com.mycompany.quanlynongsan.repository.BehaviorRepository;
 import com.mycompany.quanlynongsan.repository.OrderRepository;
+
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
-import java.io.IOException;
 
 /**
  *
- * @author joyboy
+ * @author nghiem
  */
 
 @WebServlet(urlPatterns = "/confirm-stock")
-public class ConfirmStockServlet extends HttpServlet{
-    
+public class ConfirmStockServlet extends HttpServlet {
+
     private OrderRepository orderRepository = new OrderRepository();
-    
+
     private BehaviorRepository behaviorRepository = new BehaviorRepository();
 
     @Override
@@ -35,8 +37,8 @@ public class ConfirmStockServlet extends HttpServlet{
         User user = (User) session.getAttribute("user");
         orderRepository.importProductsForUser(orderId, user.getUserId());
         Behavior behavior = behaviorRepository.findByCode("IMPORT_PRODUCT");
-                    behaviorRepository.insertLog(user.getUserId(), behavior.getBehaviorId());
+        behaviorRepository.insertLog(user.getUserId(), behavior.getBehaviorId());
         req.getRequestDispatcher("/secured/user/orders-not-imported").forward(req, resp);
     }
-    
+
 }

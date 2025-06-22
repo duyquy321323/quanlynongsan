@@ -6,18 +6,23 @@ package com.mycompany.quanlynongsan.dao;
 
 /**
  *
- * @author joyboy
+ * @author nghiem
  */
-import jakarta.mail.*;
+import java.util.Properties;
+
+import jakarta.mail.Authenticator;
+import jakarta.mail.Message;
+import jakarta.mail.MessagingException;
+import jakarta.mail.PasswordAuthentication;
+import jakarta.mail.Session;
+import jakarta.mail.Transport;
 import jakarta.mail.internet.InternetAddress;
 import jakarta.mail.internet.MimeMessage;
-
-import java.util.Properties;
 
 public class EmailService {
 
     private final String fromEmail = "daoduyquylop97@gmail.com"; // 📌 Thay bằng email của bạn
-    private final String appPassword = "csoe vrfi izqe dbhn";  // 📌 Thay bằng app password Gmail
+    private final String appPassword = "csoe vrfi izqe dbhn"; // 📌 Thay bằng app password Gmail
 
     public void sendOtpEmail(String toEmail, String otp) throws MessagingException {
         Properties props = new Properties();
@@ -41,14 +46,14 @@ public class EmailService {
 
         Transport.send(message);
     }
-    
+
     public void sendEmail(String toEmail, String subject, String messageText) throws MessagingException {
 
         Properties props = new Properties();
         props.put("mail.smtp.host", "smtp.gmail.com"); // Server SMTP
-        props.put("mail.smtp.port", "587");            // Port TLS
-        props.put("mail.smtp.auth", "true");           
-        props.put("mail.smtp.starttls.enable", "true"); 
+        props.put("mail.smtp.port", "587"); // Port TLS
+        props.put("mail.smtp.auth", "true");
+        props.put("mail.smtp.starttls.enable", "true");
 
         Session session = Session.getInstance(props, new Authenticator() {
             @Override

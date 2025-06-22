@@ -4,7 +4,6 @@
  */
 package com.mycompany.quanlynongsan.repository;
 
-import com.mycompany.quanlynongsan.config.DatabaseConnection;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -12,9 +11,11 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.mycompany.quanlynongsan.config.DatabaseConnection;
+
 /**
  *
- * @author joyboy
+ * @author nghiem
  */
 public class HasLikeProductRepository {
 
@@ -27,7 +28,8 @@ public class HasLikeProductRepository {
 
     // ✅ 1. Hàm kiểm tra người dùng có yêu thích sản phẩm hay không
     public boolean isProductFavorited(int userId, int productId) {
-        try (Connection conn = DatabaseConnection.getConnection(); PreparedStatement stmt = conn.prepareStatement(CHECK_USER_LIKED_PRODUCT)) {
+        try (Connection conn = DatabaseConnection.getConnection();
+                PreparedStatement stmt = conn.prepareStatement(CHECK_USER_LIKED_PRODUCT)) {
 
             stmt.setInt(1, userId);
             stmt.setInt(2, productId);
@@ -42,7 +44,8 @@ public class HasLikeProductRepository {
 
     // ✅ 2. Hàm thêm sản phẩm yêu thích cho người dùng
     public boolean addFavoriteProduct(int userId, int productId) {
-        try (Connection conn = DatabaseConnection.getConnection(); PreparedStatement stmt = conn.prepareStatement(INSERT_LIKE_PRODUCT)) {
+        try (Connection conn = DatabaseConnection.getConnection();
+                PreparedStatement stmt = conn.prepareStatement(INSERT_LIKE_PRODUCT)) {
 
             stmt.setInt(1, userId);
             stmt.setInt(2, productId);
@@ -57,7 +60,8 @@ public class HasLikeProductRepository {
         final String QUERY = "SELECT product_id FROM HAS_LIKE_PRODUCT WHERE user_id = ?";
         List<Integer> productIds = new ArrayList<>();
 
-        try (Connection conn = DatabaseConnection.getConnection(); PreparedStatement stmt = conn.prepareStatement(QUERY)) {
+        try (Connection conn = DatabaseConnection.getConnection();
+                PreparedStatement stmt = conn.prepareStatement(QUERY)) {
 
             stmt.setInt(1, userId);
             ResultSet rs = stmt.executeQuery();
@@ -73,7 +77,8 @@ public class HasLikeProductRepository {
 
     public boolean removeFavoriteProduct(int userId, int productId) {
 
-        try (Connection conn = DatabaseConnection.getConnection(); PreparedStatement stmt = conn.prepareStatement(DELETE_LIKE_PRODUCT)) {
+        try (Connection conn = DatabaseConnection.getConnection();
+                PreparedStatement stmt = conn.prepareStatement(DELETE_LIKE_PRODUCT)) {
 
             stmt.setInt(1, userId);
             stmt.setInt(2, productId);

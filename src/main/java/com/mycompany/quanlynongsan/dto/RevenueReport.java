@@ -9,7 +9,7 @@ import java.util.List;
 
 /**
  *
- * @author joyboy
+ * @author nghiem
  */
 public class RevenueReport {
     private int totalProductsSold;
@@ -20,7 +20,8 @@ public class RevenueReport {
     public RevenueReport() {
     }
 
-    public RevenueReport(int totalProductsSold, int totalDistinctOrders, BigDecimal totalRevenue, List<ProductRevenueReport> products) {
+    public RevenueReport(int totalProductsSold, int totalDistinctOrders, BigDecimal totalRevenue,
+            List<ProductRevenueReport> products) {
         this.totalProductsSold = totalProductsSold;
         this.totalDistinctOrders = totalDistinctOrders;
         this.totalRevenue = totalRevenue;
@@ -59,5 +60,4 @@ public class RevenueReport {
         this.products = products;
     }
 
-    
 }

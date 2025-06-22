@@ -8,7 +8,7 @@ import com.mycompany.quanlynongsan.repository.HasLikeProductRepository;
 
 /**
  *
- * @author joyboy
+ * @author nghiem
  */
 public class HasLikeProductDAO {
     private HasLikeProductRepository hasLikeProductRepository = new HasLikeProductRepository();

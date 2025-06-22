@@ -8,7 +8,7 @@ import java.math.BigDecimal;
 
 /**
  *
- * @author joyboy
+ * @author nghiem
  */
 public class SystemRevenueReport {
     private String timeGroup;
@@ -20,7 +20,8 @@ public class SystemRevenueReport {
     public SystemRevenueReport() {
     }
 
-    public SystemRevenueReport(String timeGroup, BigDecimal farmerRevenue, BigDecimal distributorImportCost, BigDecimal distributorRevenue) {
+    public SystemRevenueReport(String timeGroup, BigDecimal farmerRevenue, BigDecimal distributorImportCost,
+            BigDecimal distributorRevenue) {
         this.timeGroup = timeGroup;
         this.farmerRevenue = farmerRevenue;
         this.distributorImportCost = distributorImportCost;
@@ -58,6 +59,5 @@ public class SystemRevenueReport {
     public void setDistributorRevenue(BigDecimal distributorRevenue) {
         this.distributorRevenue = distributorRevenue;
     }
-    
-    
+
 }

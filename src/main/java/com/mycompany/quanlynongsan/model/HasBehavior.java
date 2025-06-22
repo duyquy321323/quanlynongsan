@@ -6,7 +6,7 @@ package com.mycompany.quanlynongsan.model;
 
 /**
  *
- * @author joyboy
+ * @author nghiem
  */
 public class HasBehavior {
     Integer userId;
@@ -36,6 +36,4 @@ public class HasBehavior {
         this.behaviorId = behaviorId;
     }
 
-    
-    
 }

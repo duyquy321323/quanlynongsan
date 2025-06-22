@@ -6,7 +6,7 @@ package com.mycompany.quanlynongsan.model;
 
 /**
  *
- * @author joyboy
+ * @author nghiem
  */
 public class ImageProduct {
     Integer imageProductId;
@@ -45,6 +45,5 @@ public class ImageProduct {
     public void setUrlImage(String urlImage) {
         this.urlImage = urlImage;
     }
-    
-    
+
 }

@@ -4,9 +4,6 @@
  */
 package com.mycompany.quanlynongsan.dao;
 
-import com.mycompany.quanlynongsan.config.DatabaseConnection;
-import com.mycompany.quanlynongsan.dto.ProductRevenueReport;
-import com.mycompany.quanlynongsan.dto.RevenueReport;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -14,9 +11,13 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.mycompany.quanlynongsan.config.DatabaseConnection;
+import com.mycompany.quanlynongsan.dto.ProductRevenueReport;
+import com.mycompany.quanlynongsan.dto.RevenueReport;
+
 /**
  *
- * @author joyboy
+ * @author nghiem
  */
 public class ReportDAO {
 
@@ -24,7 +25,8 @@ public class ReportDAO {
     }
 
     // Báo cáo tổng quan
-    public RevenueReport getRevenueReport(int sellerId, String type, String fromDate, String toDate) throws SQLException {
+    public RevenueReport getRevenueReport(int sellerId, String type, String fromDate, String toDate)
+            throws SQLException {
         RevenueReport report = new RevenueReport();
 
         String sqlTotal = ""
@@ -40,7 +42,8 @@ public class ReportDAO {
                 + "              AND (o.created_date >= ? OR ? IS NULL)\n"
                 + "              AND (o.created_date <= ? OR ? IS NULL)";
 
-        try (Connection conn = DatabaseConnection.getConnection(); PreparedStatement ps = conn.prepareStatement(sqlTotal)) {
+        try (Connection conn = DatabaseConnection.getConnection();
+                PreparedStatement ps = conn.prepareStatement(sqlTotal)) {
 
             ps.setInt(1, sellerId);
             ps.setString(2, fromDate);
@@ -62,7 +65,8 @@ public class ReportDAO {
     }
 
     // Báo cáo theo từng sản phẩm + theo loại (ngày/tháng/năm)
-    public List<ProductRevenueReport> getProductRevenueReport(int sellerId, String type, String fromDate, String toDate) throws SQLException {
+    public List<ProductRevenueReport> getProductRevenueReport(int sellerId, String type, String fromDate, String toDate)
+            throws SQLException {
         List<ProductRevenueReport> list = new ArrayList<>();
 
         String groupField;

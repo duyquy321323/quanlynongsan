@@ -10,12 +10,12 @@ import java.sql.SQLException;
 
 /**
  *
- * @author joyboy
+ * @author nghiem
  */
 public class DatabaseConnection {
     private static final String URL = "jdbc:sqlserver://localhost:1433;databaseName=quanlynongsan;encrypt=true;trustServerCertificate=true";
-    private static final String USERNAME = "sa";           // Hoặc user khác
-    private static final String PASSWORD = "Quy0905859213@.";
+    private static final String USERNAME = "sa"; // Hoặc user khác
+    private static final String PASSWORD = "123456";
 
     public static Connection getConnection() throws SQLException {
         try {

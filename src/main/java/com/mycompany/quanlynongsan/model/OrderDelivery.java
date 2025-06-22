@@ -6,7 +6,7 @@ package com.mycompany.quanlynongsan.model;
 
 /**
  *
- * @author joyboy
+ * @author nghiem
  */
 public class OrderDelivery {
     Integer orderId;
@@ -35,6 +35,5 @@ public class OrderDelivery {
     public void setDeliveryId(Integer deliveryId) {
         this.deliveryId = deliveryId;
     }
-    
-    
+
 }

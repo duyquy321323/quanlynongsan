@@ -4,29 +4,31 @@
  */
 package com.mycompany.quanlynongsan.controller;
 
+import java.io.IOException;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mycompany.quanlynongsan.dao.HasCartDAO;
 import com.mycompany.quanlynongsan.model.Behavior;
-import com.mycompany.quanlynongsan.response.CartSummaryResponse;
 import com.mycompany.quanlynongsan.model.User;
 import com.mycompany.quanlynongsan.repository.BehaviorRepository;
+import com.mycompany.quanlynongsan.response.CartSummaryResponse;
+
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
-import java.io.IOException;
 
 /**
  *
- * @author joyboy
+ * @author nghiem
  */
 @WebServlet(urlPatterns = "/secured/user/has-cart")
 public class HasCartServlet extends HttpServlet {
 
     private HasCartDAO hasCartDAO = new HasCartDAO();
-    
+
     private BehaviorRepository behaviorRepository = new BehaviorRepository();
 
     @Override
@@ -67,5 +69,4 @@ public class HasCartServlet extends HttpServlet {
         }
     }
 
-    
 }

@@ -4,25 +4,28 @@
  */
 package com.mycompany.quanlynongsan.controller;
 
+import java.io.IOException;
+
 import com.mycompany.quanlynongsan.dto.ProblemDetailDTO;
 import com.mycompany.quanlynongsan.repository.ProblemRepository;
+
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import java.io.IOException;
 
 /**
  *
- * @author joyboy
+ * @author nghiem
  */
 @WebServlet("/secured/admin/problem-detail")
 public class ProblemDetailServlet extends HttpServlet {
     private final ProblemRepository problemRepository = new ProblemRepository();
 
     @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
         try {
             int problemId = Integer.parseInt(request.getParameter("problemId"));
             ProblemDetailDTO detail = problemRepository.getProblemDetailById(problemId);

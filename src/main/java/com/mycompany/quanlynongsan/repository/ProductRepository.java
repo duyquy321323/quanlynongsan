@@ -4,10 +4,6 @@
  */
 package com.mycompany.quanlynongsan.repository;
 
-import com.mycompany.quanlynongsan.config.DatabaseConnection;
-import com.mycompany.quanlynongsan.dto.ProductDTO;
-import com.mycompany.quanlynongsan.model.ImageProduct;
-import com.mycompany.quanlynongsan.model.Product;
 import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -17,9 +13,12 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import com.mycompany.quanlynongsan.config.DatabaseConnection;
+import com.mycompany.quanlynongsan.model.Product;
+
 /**
  *
- * @author joyboy
+ * @author nghiem
  */
 public class ProductRepository {
 
@@ -37,44 +36,140 @@ public class ProductRepository {
 
     public ProductRepository() {
     }
-    
-    public List<Product> searchProductsWithPaging(String name, String[] origins, Double minPrice, Double maxPrice, Integer categoryId, int roleId, int offset, int limit) {
-    List<Product> products = new ArrayList<>();
-    StringBuilder sql = new StringBuilder("SELECT DISTINCT p.*, u.username FROM PRODUCT p ");
-    sql.append("JOIN PRODUCT_CATEGORY pc ON p.product_id = pc.product_id JOIN [USER] u ON u.user_id = p.holder_id ");
-    sql.append("WHERE p.is_sell = 1 AND p.is_browse = 1 AND p.is_active = 1 AND u.role_id = ? ");
 
-    if (name != null && !name.trim().isEmpty()) sql.append("AND p.name LIKE ? ");
-    if (origins != null && origins.length != 0) {
-        sql.append("AND (");
-        for (int i = 0; i < origins.length; i++) {
-            sql.append("p.place_of_manufacture LIKE ?");
-            if (i < origins.length - 1) sql.append(" OR ");
-        }
-        sql.append(") ");
-    }
-    if (minPrice != null) sql.append("AND p.price >= ? ");
-    if (maxPrice != null) sql.append("AND p.price <= ? ");
-    if (categoryId != null && categoryId != 0) sql.append("AND pc.category_id = ? ");
-    sql.append("ORDER BY p.created_date DESC OFFSET ? ROWS FETCH NEXT ? ROWS ONLY");
+    public List<Product> searchProductsWithPaging(String name, String[] origins, Double minPrice, Double maxPrice,
+            Integer categoryId, int roleId, int offset, int limit) {
+        List<Product> products = new ArrayList<>();
+        StringBuilder sql = new StringBuilder("SELECT DISTINCT p.*, u.username FROM PRODUCT p ");
+        sql.append(
+                "JOIN PRODUCT_CATEGORY pc ON p.product_id = pc.product_id JOIN [USER] u ON u.user_id = p.holder_id ");
+        sql.append("WHERE p.is_sell = 1 AND p.is_browse = 1 AND p.is_active = 1 AND u.role_id = ? ");
 
-    try (Connection conn = DatabaseConnection.getConnection(); PreparedStatement stmt = conn.prepareStatement(sql.toString())) {
-        int paramIndex = 1;
-        stmt.setInt(paramIndex++, roleId);
-        if (name != null && !name.trim().isEmpty()) stmt.setString(paramIndex++, "%" + name + "%");
+        if (name != null && !name.trim().isEmpty())
+            sql.append("AND p.name LIKE ? ");
         if (origins != null && origins.length != 0) {
-            for (String origin : origins) stmt.setString(paramIndex++, "%" + origin + "%");
+            sql.append("AND (");
+            for (int i = 0; i < origins.length; i++) {
+                sql.append("p.place_of_manufacture LIKE ?");
+                if (i < origins.length - 1)
+                    sql.append(" OR ");
+            }
+            sql.append(") ");
         }
-        if (minPrice != null) stmt.setDouble(paramIndex++, minPrice);
-        if (maxPrice != null) stmt.setDouble(paramIndex++, maxPrice);
-        if (categoryId != null && categoryId != 0) stmt.setInt(paramIndex++, categoryId);
+        if (minPrice != null)
+            sql.append("AND p.price >= ? ");
+        if (maxPrice != null)
+            sql.append("AND p.price <= ? ");
+        if (categoryId != null && categoryId != 0)
+            sql.append("AND pc.category_id = ? ");
+        sql.append("ORDER BY p.created_date DESC OFFSET ? ROWS FETCH NEXT ? ROWS ONLY");
 
-        stmt.setInt(paramIndex++, offset);
-        stmt.setInt(paramIndex, limit);
+        try (Connection conn = DatabaseConnection.getConnection();
+                PreparedStatement stmt = conn.prepareStatement(sql.toString())) {
+            int paramIndex = 1;
+            stmt.setInt(paramIndex++, roleId);
+            if (name != null && !name.trim().isEmpty())
+                stmt.setString(paramIndex++, "%" + name + "%");
+            if (origins != null && origins.length != 0) {
+                for (String origin : origins)
+                    stmt.setString(paramIndex++, "%" + origin + "%");
+            }
+            if (minPrice != null)
+                stmt.setDouble(paramIndex++, minPrice);
+            if (maxPrice != null)
+                stmt.setDouble(paramIndex++, maxPrice);
+            if (categoryId != null && categoryId != 0)
+                stmt.setInt(paramIndex++, categoryId);
 
-        ResultSet rs = stmt.executeQuery();
-        while (rs.next()) {
-            products.add(new Product(
+            stmt.setInt(paramIndex++, offset);
+            stmt.setInt(paramIndex, limit);
+
+            ResultSet rs = stmt.executeQuery();
+            while (rs.next()) {
+                products.add(new Product(
+                        rs.getInt("product_id"),
+                        rs.getString("name"),
+                        rs.getString("description"),
+                        rs.getBigDecimal("price"),
+                        rs.getInt("quantity"),
+                        rs.getString("status"),
+                        rs.getBoolean("is_sell"),
+                        rs.getBoolean("is_browse"),
+                        rs.getString("place_of_manufacture"),
+                        rs.getBoolean("is_active"),
+                        rs.getInt("holder_id"),
+                        new Date(rs.getDate("created_date").getTime())));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return products;
+    }
+
+    public int countSearchProducts(String name, String[] origins, Double minPrice, Double maxPrice, Integer categoryId,
+            int roleId) {
+        StringBuilder sql = new StringBuilder("SELECT COUNT(DISTINCT p.product_id) FROM PRODUCT p ");
+        sql.append(
+                "JOIN PRODUCT_CATEGORY pc ON p.product_id = pc.product_id JOIN [USER] u ON u.user_id = p.holder_id ");
+        sql.append("WHERE p.is_sell = 1 AND p.is_browse = 1 AND p.is_active = 1 AND u.role_id = ? ");
+
+        if (name != null && !name.trim().isEmpty())
+            sql.append("AND p.name LIKE ? ");
+        if (origins != null && origins.length != 0) {
+            sql.append("AND (");
+            for (int i = 0; i < origins.length; i++) {
+                sql.append("p.place_of_manufacture LIKE ?");
+                if (i < origins.length - 1)
+                    sql.append(" OR ");
+            }
+            sql.append(") ");
+        }
+        if (minPrice != null)
+            sql.append("AND p.price >= ? ");
+        if (maxPrice != null)
+            sql.append("AND p.price <= ? ");
+        if (categoryId != null && categoryId != 0)
+            sql.append("AND pc.category_id = ? ");
+
+        try (Connection conn = DatabaseConnection.getConnection();
+                PreparedStatement stmt = conn.prepareStatement(sql.toString())) {
+            int paramIndex = 1;
+            stmt.setInt(paramIndex++, roleId);
+            if (name != null && !name.trim().isEmpty())
+                stmt.setString(paramIndex++, "%" + name + "%");
+            if (origins != null && origins.length != 0) {
+                for (String origin : origins)
+                    stmt.setString(paramIndex++, "%" + origin + "%");
+            }
+            if (minPrice != null)
+                stmt.setDouble(paramIndex++, minPrice);
+            if (maxPrice != null)
+                stmt.setDouble(paramIndex++, maxPrice);
+            if (categoryId != null && categoryId != 0)
+                stmt.setInt(paramIndex++, categoryId);
+
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next())
+                return rs.getInt(1);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return 0;
+    }
+
+    public List<Product> findAllWithPaging(int roleId, int offset, int limit) {
+        List<Product> products = new ArrayList<>();
+        String sql = "SELECT p.*, u.full_name FROM PRODUCT p JOIN [USER] u ON u.user_id = p.holder_id WHERE p.is_sell = 1 AND p.is_browse = 1 AND p.is_active = 1 AND u.role_id = ? ORDER BY p.created_date DESC OFFSET ? ROWS FETCH NEXT ? ROWS ONLY";
+        try (Connection conn = DatabaseConnection.getConnection();
+                PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setInt(1, roleId);
+            stmt.setInt(2, offset);
+            stmt.setInt(3, limit);
+            ResultSet rs = stmt.executeQuery();
+            while (rs.next()) {
+                products.add(
+                        new Product(
                                 rs.getInt("product_id"),
                                 rs.getString("name"),
                                 rs.getString("description"),
@@ -86,80 +181,7 @@ public class ProductRepository {
                                 rs.getString("place_of_manufacture"),
                                 rs.getBoolean("is_active"),
                                 rs.getInt("holder_id"),
-                                new Date(rs.getDate("created_date").getTime())
-                        ));
-        }
-    } catch (Exception e) {
-        e.printStackTrace();
-    }
-    return products;
-}
-
-    
-    public int countSearchProducts(String name, String[] origins, Double minPrice, Double maxPrice, Integer categoryId, int roleId) {
-    StringBuilder sql = new StringBuilder("SELECT COUNT(DISTINCT p.product_id) FROM PRODUCT p ");
-    sql.append("JOIN PRODUCT_CATEGORY pc ON p.product_id = pc.product_id JOIN [USER] u ON u.user_id = p.holder_id ");
-    sql.append("WHERE p.is_sell = 1 AND p.is_browse = 1 AND p.is_active = 1 AND u.role_id = ? ");
-
-    if (name != null && !name.trim().isEmpty()) sql.append("AND p.name LIKE ? ");
-    if (origins != null && origins.length != 0) {
-        sql.append("AND (");
-        for (int i = 0; i < origins.length; i++) {
-            sql.append("p.place_of_manufacture LIKE ?");
-            if (i < origins.length - 1) sql.append(" OR ");
-        }
-        sql.append(") ");
-    }
-    if (minPrice != null) sql.append("AND p.price >= ? ");
-    if (maxPrice != null) sql.append("AND p.price <= ? ");
-    if (categoryId != null && categoryId != 0) sql.append("AND pc.category_id = ? ");
-
-    try (Connection conn = DatabaseConnection.getConnection(); PreparedStatement stmt = conn.prepareStatement(sql.toString())) {
-        int paramIndex = 1;
-        stmt.setInt(paramIndex++, roleId);
-        if (name != null && !name.trim().isEmpty()) stmt.setString(paramIndex++, "%" + name + "%");
-        if (origins != null && origins.length != 0) {
-            for (String origin : origins) stmt.setString(paramIndex++, "%" + origin + "%");
-        }
-        if (minPrice != null) stmt.setDouble(paramIndex++, minPrice);
-        if (maxPrice != null) stmt.setDouble(paramIndex++, maxPrice);
-        if (categoryId != null && categoryId != 0) stmt.setInt(paramIndex++, categoryId);
-
-        ResultSet rs = stmt.executeQuery();
-        if (rs.next()) return rs.getInt(1);
-
-    } catch (Exception e) {
-        e.printStackTrace();
-    }
-    return 0;
-}
-
-    
-    public List<Product> findAllWithPaging(int roleId, int offset, int limit) {
-        List<Product> products = new ArrayList<>();
-        String sql = "SELECT p.*, u.full_name FROM PRODUCT p JOIN [USER] u ON u.user_id = p.holder_id WHERE p.is_sell = 1 AND p.is_browse = 1 AND p.is_active = 1 AND u.role_id = ? ORDER BY p.created_date DESC OFFSET ? ROWS FETCH NEXT ? ROWS ONLY";
-        try (Connection conn = DatabaseConnection.getConnection(); PreparedStatement stmt = conn.prepareStatement(sql)) {
-            stmt.setInt(1, roleId);
-            stmt.setInt(2, offset);
-            stmt.setInt(3, limit);
-            ResultSet rs = stmt.executeQuery();
-            while (rs.next()) {
-                products.add(
-                            new Product(
-                                    rs.getInt("product_id"),
-                                    rs.getString("name"),
-                                    rs.getString("description"),
-                                    rs.getBigDecimal("price"),
-                                    rs.getInt("quantity"),
-                                    rs.getString("status"),
-                                    rs.getBoolean("is_sell"),
-                                    rs.getBoolean("is_browse"),
-                                    rs.getString("place_of_manufacture"),
-                                    rs.getBoolean("is_active"),
-                                    rs.getInt("holder_id"),
-                                    new Date(rs.getDate("created_date").getTime())
-                            )
-                    );
+                                new Date(rs.getDate("created_date").getTime())));
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -167,22 +189,21 @@ public class ProductRepository {
         return products;
     }
 
-
     public int countAll(int roleId) {
-    String sql = "SELECT COUNT(*) FROM PRODUCT p JOIN [USER] u ON u.user_id = p.holder_id WHERE p.is_sell = 1 AND p.is_browse = 1 AND p.is_active = 1 AND u.role_id = ?";
-    try (Connection conn = DatabaseConnection.getConnection(); PreparedStatement stmt = conn.prepareStatement(sql)) {
-        stmt.setInt(1, roleId);
-        ResultSet rs = stmt.executeQuery();
-        if (rs.next()) {
-            return rs.getInt(1);
+        String sql = "SELECT COUNT(*) FROM PRODUCT p JOIN [USER] u ON u.user_id = p.holder_id WHERE p.is_sell = 1 AND p.is_browse = 1 AND p.is_active = 1 AND u.role_id = ?";
+        try (Connection conn = DatabaseConnection.getConnection();
+                PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setInt(1, roleId);
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                return rs.getInt(1);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-    } catch (Exception e) {
-        e.printStackTrace();
+        return 0;
     }
-    return 0;
-}
 
-    
     public List<Product> find10ByCategoryId(Integer categoryId, Integer roleId) {
         try (Connection conn = DatabaseConnection.getConnection()) {
             PreparedStatement stmt = conn.prepareStatement(FIND_10_BY_CATEGORY_ID);
@@ -204,9 +225,7 @@ public class ProductRepository {
                                 rs.getString("place_of_manufacture"),
                                 rs.getBoolean("is_active"),
                                 rs.getInt("holder_id"),
-                                new Date(rs.getDate("created_date").getTime())
-                        )
-                );
+                                new Date(rs.getDate("created_date").getTime())));
             }
             return products;
         } catch (Exception ex) {
@@ -219,24 +238,24 @@ public class ProductRepository {
     public List<Product> findByStatus(Boolean isBrowse) {
         String sql = "SELECT * FROM PRODUCT WHERE is_browse = ? AND is_active = 1";
         List<Product> products = new ArrayList<>();
-        try (Connection conn = DatabaseConnection.getConnection(); PreparedStatement stmt = conn.prepareStatement(sql)) {
+        try (Connection conn = DatabaseConnection.getConnection();
+                PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setBoolean(1, isBrowse);
             ResultSet rs = stmt.executeQuery();
             while (rs.next()) {
                 products.add(new Product(
-                                rs.getInt("product_id"),
-                                rs.getString("name"),
-                                rs.getString("description"),
-                                rs.getBigDecimal("price"),
-                                rs.getInt("quantity"),
-                                rs.getString("status"),
-                                rs.getBoolean("is_sell"),
-                                rs.getBoolean("is_browse"),
-                                rs.getString("place_of_manufacture"),
-                                rs.getBoolean("is_active"),
-                                rs.getInt("holder_id"),
-                                new Date(rs.getDate("created_date").getTime())
-                        ));
+                        rs.getInt("product_id"),
+                        rs.getString("name"),
+                        rs.getString("description"),
+                        rs.getBigDecimal("price"),
+                        rs.getInt("quantity"),
+                        rs.getString("status"),
+                        rs.getBoolean("is_sell"),
+                        rs.getBoolean("is_browse"),
+                        rs.getString("place_of_manufacture"),
+                        rs.getBoolean("is_active"),
+                        rs.getInt("holder_id"),
+                        new Date(rs.getDate("created_date").getTime())));
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -246,7 +265,8 @@ public class ProductRepository {
 
     public void updateStatus(int productId, Boolean isBrowse) {
         String sql = "UPDATE PRODUCT SET is_browse = ? WHERE product_id = ?";
-        try (Connection conn = DatabaseConnection.getConnection(); PreparedStatement stmt = conn.prepareStatement(sql)) {
+        try (Connection conn = DatabaseConnection.getConnection();
+                PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setBoolean(1, isBrowse);
             stmt.setInt(2, productId);
             stmt.executeUpdate();
@@ -254,10 +274,11 @@ public class ProductRepository {
             e.printStackTrace();
         }
     }
-    
+
     public void updateActive(int productId, Boolean isActive) {
         String sql = "UPDATE PRODUCT SET is_active = ? WHERE product_id = ?";
-        try (Connection conn = DatabaseConnection.getConnection(); PreparedStatement stmt = conn.prepareStatement(sql)) {
+        try (Connection conn = DatabaseConnection.getConnection();
+                PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setBoolean(1, isActive);
             stmt.setInt(2, productId);
             stmt.executeUpdate();
@@ -286,9 +307,7 @@ public class ProductRepository {
                                 rs.getString("place_of_manufacture"),
                                 rs.getBoolean("is_active"),
                                 rs.getInt("holder_id"),
-                                new Date(rs.getDate("created_date").getTime())
-                        )
-                );
+                                new Date(rs.getDate("created_date").getTime())));
             }
             return products;
         } catch (Exception ex) {
@@ -318,9 +337,7 @@ public class ProductRepository {
                                 rs.getString("place_of_manufacture"),
                                 rs.getBoolean("is_active"),
                                 rs.getInt("holder_id"),
-                                new Date(rs.getDate("created_date").getTime())
-                        )
-                );
+                                new Date(rs.getDate("created_date").getTime())));
             }
             return products;
         } catch (Exception ex) {
@@ -349,8 +366,7 @@ public class ProductRepository {
                         rs.getString("place_of_manufacture"),
                         rs.getBoolean("is_active"),
                         rs.getInt("holder_id"),
-                        new Date(rs.getDate("created_date").getTime())
-                );
+                        new Date(rs.getDate("created_date").getTime()));
             }
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -378,8 +394,7 @@ public class ProductRepository {
                         rs.getString("place_of_manufacture"),
                         rs.getBoolean("is_active"),
                         rs.getInt("holder_id"),
-                        new Date(rs.getDate("created_date").getTime())
-                );
+                        new Date(rs.getDate("created_date").getTime()));
             }
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -388,10 +403,12 @@ public class ProductRepository {
         return null;
     }
 
-    public List<Product> searchProducts(String name, String[] placeOfManufacture, Double minPrice, Double maxPrice, Integer categoryId, Integer roleId) {
+    public List<Product> searchProducts(String name, String[] placeOfManufacture, Double minPrice, Double maxPrice,
+            Integer categoryId, Integer roleId) {
         List<Product> products = new ArrayList<>();
         StringBuilder sql = new StringBuilder("SELECT DISTINCT p.* FROM PRODUCT p ");
-        sql.append("JOIN PRODUCT_CATEGORY pc ON p.product_id = pc.product_id JOIN [USER] u ON u.user_id = p.holder_id ");
+        sql.append(
+                "JOIN PRODUCT_CATEGORY pc ON p.product_id = pc.product_id JOIN [USER] u ON u.user_id = p.holder_id ");
         sql.append("WHERE p.is_sell = 1 AND p.is_browse = 1 AND p.is_active = 1 AND u.role_id = ? ");
 
         if (name != null && !name.trim().isEmpty()) {
@@ -417,7 +434,8 @@ public class ProductRepository {
             sql.append("AND pc.category_id = ? ");
         }
 
-        try (Connection conn = DatabaseConnection.getConnection(); PreparedStatement stmt = conn.prepareStatement(sql.toString())) {
+        try (Connection conn = DatabaseConnection.getConnection();
+                PreparedStatement stmt = conn.prepareStatement(sql.toString())) {
             int paramIndex = 1;
             stmt.setInt(paramIndex++, roleId);
             if (name != null && !name.trim().isEmpty()) {
@@ -451,8 +469,7 @@ public class ProductRepository {
                         rs.getString("place_of_manufacture"),
                         rs.getBoolean("is_active"),
                         rs.getInt("holder_id"),
-                        new Date(rs.getDate("created_date").getTime())
-                ));
+                        new Date(rs.getDate("created_date").getTime())));
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -463,7 +480,8 @@ public class ProductRepository {
     public List<Product> findByHolderId(int holderId) {
         List<Product> products = new ArrayList<>();
 
-        try (Connection conn = DatabaseConnection.getConnection(); PreparedStatement stmt = conn.prepareStatement(FIND_BY_HOLDER_ID)) {
+        try (Connection conn = DatabaseConnection.getConnection();
+                PreparedStatement stmt = conn.prepareStatement(FIND_BY_HOLDER_ID)) {
 
             stmt.setInt(1, holderId);
             ResultSet rs = stmt.executeQuery();
@@ -481,8 +499,7 @@ public class ProductRepository {
                         rs.getString("place_of_manufacture"),
                         rs.getBoolean("is_active"),
                         rs.getInt("holder_id"),
-                        new Date(rs.getDate("created_date").getTime())
-                ));
+                        new Date(rs.getDate("created_date").getTime())));
             }
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -503,7 +520,8 @@ public class ProductRepository {
             int productId;
 
             // Insert PRODUCT
-            try (PreparedStatement stmt = conn.prepareStatement(INSERT_PRODUCT, PreparedStatement.RETURN_GENERATED_KEYS)) {
+            try (PreparedStatement stmt = conn.prepareStatement(INSERT_PRODUCT,
+                    PreparedStatement.RETURN_GENERATED_KEYS)) {
                 stmt.setString(1, product.getName());
                 stmt.setString(2, product.getDescription());
                 stmt.setBigDecimal(3, product.getPrice());
@@ -596,7 +614,7 @@ public class ProductRepository {
             }
 
             // Xóa ảnh cũ
-            if(newImageProducts.size() > 0){
+            if (newImageProducts.size() > 0) {
                 try (PreparedStatement stmt = conn.prepareStatement(DELETE_IMAGE)) {
                     stmt.setInt(1, product.getProductId());
                     stmt.executeUpdate();

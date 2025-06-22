@@ -6,7 +6,7 @@ package com.mycompany.quanlynongsan.model;
 
 /**
  *
- * @author joyboy
+ * @author nghiem
  */
 public class Category {
     Integer categoryId;
@@ -35,6 +35,5 @@ public class Category {
     public void setName(String name) {
         this.name = name;
     }
-    
-    
+
 }

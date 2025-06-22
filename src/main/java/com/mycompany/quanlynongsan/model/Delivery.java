@@ -8,7 +8,7 @@ import java.util.Date;
 
 /**
  *
- * @author joyboy
+ * @author nghiem
  */
 public class Delivery {
     Integer deliveryId;
@@ -47,6 +47,5 @@ public class Delivery {
     public void setCreatedDate(Date createdDate) {
         this.createdDate = createdDate;
     }
-    
-    
+
 }

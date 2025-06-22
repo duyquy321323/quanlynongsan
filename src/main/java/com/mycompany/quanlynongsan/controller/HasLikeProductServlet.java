@@ -4,20 +4,22 @@
  */
 package com.mycompany.quanlynongsan.controller;
 
+import java.io.IOException;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mycompany.quanlynongsan.dao.HasLikeProductDAO;
 import com.mycompany.quanlynongsan.model.User;
+
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
-import java.io.IOException;
 
 /**
  *
- * @author joyboy
+ * @author nghiem
  */
 @WebServlet(urlPatterns = "/secured/user/has-like-product")
 public class HasLikeProductServlet extends HttpServlet {
@@ -42,7 +44,7 @@ public class HasLikeProductServlet extends HttpServlet {
         Integer productId = Integer.valueOf(req.getParameter("productId"));
         resp.setContentType("application/json");
         boolean success = false;
-        if(action.equals("add")){
+        if (action.equals("add")) {
             success = hasLikeProductDAO.addLikeProduct(user.getUserId(), productId);
         } else if (action.equals("delete")) {
             success = hasLikeProductDAO.removeLikeProduct(user.getUserId(), productId);

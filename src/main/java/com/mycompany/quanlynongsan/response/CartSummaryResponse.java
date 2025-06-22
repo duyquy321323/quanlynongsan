@@ -4,12 +4,11 @@
  */
 package com.mycompany.quanlynongsan.response;
 
-import java.math.BigDecimal;
 import java.util.List;
 
 /**
  *
- * @author joyboy
+ * @author nghiem
  */
 public class CartSummaryResponse {
     private int totalQuantity;
@@ -46,5 +45,4 @@ public class CartSummaryResponse {
         this.itemCartResponses = itemCartResponses;
     }
 
-    
 }

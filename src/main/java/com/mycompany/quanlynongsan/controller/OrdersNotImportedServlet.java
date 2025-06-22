@@ -4,29 +4,30 @@
  */
 package com.mycompany.quanlynongsan.controller;
 
+import java.io.IOException;
+import java.util.List;
+
 import com.mycompany.quanlynongsan.model.User;
 import com.mycompany.quanlynongsan.repository.OrderProductRepository;
-import com.mycompany.quanlynongsan.repository.OrderRepository;
+
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.util.List;
 
 /**
  *
- * @author joyboy
+ * @author nghiem
  */
 
 @WebServlet(urlPatterns = "/secured/user/orders-not-imported")
 public class OrdersNotImportedServlet extends HttpServlet {
-    
+
     private OrderProductRepository orderProductRepository = new OrderProductRepository();
-    
+
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
-        throws ServletException, IOException {
+            throws ServletException, IOException {
 
         int userId = ((User) request.getSession().getAttribute("user")).getUserId();
 
@@ -38,7 +39,8 @@ public class OrdersNotImportedServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        super.doPost(req, resp); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/OverriddenMethodBody
+        super.doPost(req, resp); // Generated from
+                                 // nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/OverriddenMethodBody
     }
 
 }

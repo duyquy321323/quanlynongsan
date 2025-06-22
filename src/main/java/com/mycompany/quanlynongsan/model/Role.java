@@ -6,7 +6,7 @@ package com.mycompany.quanlynongsan.model;
 
 /**
  *
- * @author joyboy
+ * @author nghiem
  */
 public class Role {
     Integer roleId;
@@ -35,5 +35,5 @@ public class Role {
     public void setName(String name) {
         this.name = name;
     }
-    
+
 }

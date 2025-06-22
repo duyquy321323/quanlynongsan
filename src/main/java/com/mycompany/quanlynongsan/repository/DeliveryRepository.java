@@ -4,8 +4,6 @@
  */
 package com.mycompany.quanlynongsan.repository;
 
-import com.mycompany.quanlynongsan.config.DatabaseConnection;
-import com.mycompany.quanlynongsan.model.Delivery;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Timestamp;
@@ -13,9 +11,12 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import com.mycompany.quanlynongsan.config.DatabaseConnection;
+import com.mycompany.quanlynongsan.model.Delivery;
+
 /**
  *
- * @author joyboy
+ * @author nghiem
  */
 public class DeliveryRepository {
 
@@ -51,7 +52,9 @@ public class DeliveryRepository {
         try (var conn = DatabaseConnection.getConnection()) {
             conn.setAutoCommit(false);
 
-            try (PreparedStatement insertDeliveryStmt = conn.prepareStatement(INSERT_DELIVERY_SQL, PreparedStatement.RETURN_GENERATED_KEYS); PreparedStatement insertOrderDeliveryStmt = conn.prepareStatement(INSERT_ORDER_DELIVERY_SQL)) {
+            try (PreparedStatement insertDeliveryStmt = conn.prepareStatement(INSERT_DELIVERY_SQL,
+                    PreparedStatement.RETURN_GENERATED_KEYS);
+                    PreparedStatement insertOrderDeliveryStmt = conn.prepareStatement(INSERT_ORDER_DELIVERY_SQL)) {
 
                 // Thêm vào bảng DELIVERY
                 insertDeliveryStmt.setString(1, address);

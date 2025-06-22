@@ -8,7 +8,7 @@ import java.util.Date;
 
 /**
  *
- * @author joyboy
+ * @author nghiem
  */
 public class Problem {
     Integer problemId;
@@ -21,7 +21,8 @@ public class Problem {
     public Problem() {
     }
 
-    public Problem(Integer problemId, String name, String reason, Boolean isResolved, Integer productId, Date createdDate) {
+    public Problem(Integer problemId, String name, String reason, Boolean isResolved, Integer productId,
+            Date createdDate) {
         this.problemId = problemId;
         this.name = name;
         this.reason = reason;
@@ -78,5 +79,4 @@ public class Problem {
         this.createdDate = createdDate;
     }
 
-    
 }

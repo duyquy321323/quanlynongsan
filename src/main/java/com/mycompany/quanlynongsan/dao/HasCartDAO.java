@@ -4,23 +4,22 @@
  */
 package com.mycompany.quanlynongsan.dao;
 
-import com.mycompany.quanlynongsan.dto.ProductDTO;
-import com.mycompany.quanlynongsan.model.HasCart;
-import com.mycompany.quanlynongsan.model.ImageProduct;
-import com.mycompany.quanlynongsan.model.Product;
-import com.mycompany.quanlynongsan.response.CartSummaryResponse;
-import com.mycompany.quanlynongsan.repository.HasCartRepository;
-import com.mycompany.quanlynongsan.repository.ImageProductRepository;
-import com.mycompany.quanlynongsan.repository.ProductRepository;
-import com.mycompany.quanlynongsan.response.ItemCartResponse;
-import java.math.BigDecimal;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
 
+import com.mycompany.quanlynongsan.model.HasCart;
+import com.mycompany.quanlynongsan.model.ImageProduct;
+import com.mycompany.quanlynongsan.model.Product;
+import com.mycompany.quanlynongsan.repository.HasCartRepository;
+import com.mycompany.quanlynongsan.repository.ImageProductRepository;
+import com.mycompany.quanlynongsan.repository.ProductRepository;
+import com.mycompany.quanlynongsan.response.CartSummaryResponse;
+import com.mycompany.quanlynongsan.response.ItemCartResponse;
+
 /**
  *
- * @author joyboy
+ * @author nghiem
  */
 public class HasCartDAO {
 

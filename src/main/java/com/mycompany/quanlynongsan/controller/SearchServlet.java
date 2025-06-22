@@ -4,35 +4,37 @@
  */
 package com.mycompany.quanlynongsan.controller;
 
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+
 import com.mycompany.quanlynongsan.dao.CategoryDAO;
 import com.mycompany.quanlynongsan.dao.ProductDAO;
 import com.mycompany.quanlynongsan.dto.ProductDTO;
 import com.mycompany.quanlynongsan.model.Behavior;
 import com.mycompany.quanlynongsan.model.User;
 import com.mycompany.quanlynongsan.repository.BehaviorRepository;
+
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  *
- * @author joyboy
+ * @author nghiem
  */
 
-@WebServlet(urlPatterns = {"/user/search"})
-public class SearchServlet extends HttpServlet{
-    
-     private CategoryDAO categoryDAO = new CategoryDAO();
-     
-     private ProductDAO productDAO = new ProductDAO();
-     
-     private BehaviorRepository behaviorRepository = new BehaviorRepository();
+@WebServlet(urlPatterns = { "/user/search" })
+public class SearchServlet extends HttpServlet {
+
+    private CategoryDAO categoryDAO = new CategoryDAO();
+
+    private ProductDAO productDAO = new ProductDAO();
+
+    private BehaviorRepository behaviorRepository = new BehaviorRepository();
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -40,9 +42,10 @@ public class SearchServlet extends HttpServlet{
         HttpSession session = req.getSession();
         User user = (User) session.getAttribute("user");
         Integer roleId;
-        if(user != null)
-            roleId = user.getRoleId() != 1? user.getRoleId() - 1 : 1;
-        else roleId = 2;
+        if (user != null)
+            roleId = user.getRoleId() != 1 ? user.getRoleId() - 1 : 1;
+        else
+            roleId = 2;
         categories.add(new com.mycompany.quanlynongsan.model.Category(0, "Tất cả"));
         categories.addAll(categoryDAO.findAll());
         List<ProductDTO> products = productDAO.findAll(roleId);
@@ -50,7 +53,7 @@ public class SearchServlet extends HttpServlet{
         req.setAttribute("categories", categories);
         req.getRequestDispatcher("/user/search.jsp").forward(req, resp);
     }
-    
+
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String name = req.getParameter("name");
@@ -67,20 +70,23 @@ public class SearchServlet extends HttpServlet{
         if (minPrice != null && !minPrice.isEmpty()) {
             try {
                 minPriceNum = Double.parseDouble(minPrice);
-            } catch (NumberFormatException ignored) {}
+            } catch (NumberFormatException ignored) {
+            }
         }
 
         if (maxPrice != null && !maxPrice.isEmpty()) {
             try {
                 maxPriceNum = Double.parseDouble(maxPrice);
-            } catch (NumberFormatException ignored) {}
+            } catch (NumberFormatException ignored) {
+            }
         }
 
         Integer categoryId = null;
         if (categoryIdStr != null && !categoryIdStr.isEmpty()) {
             try {
                 categoryId = Integer.parseInt(categoryIdStr);
-            } catch (NumberFormatException ignored) {}
+            } catch (NumberFormatException ignored) {
+            }
         }
 
         // Gọi DAO để tìm kiếm - truyền list<String> origin
@@ -88,10 +94,12 @@ public class SearchServlet extends HttpServlet{
         HttpSession session = req.getSession();
         User user = (User) session.getAttribute("user");
         Integer roleId;
-        if(user != null)
-            roleId = user.getRoleId() != 1? user.getRoleId() - 1 : 1;
-        else roleId = 2;
-        List<ProductDTO> productList = productDAO.searchProducts(name, origins, minPriceNum, maxPriceNum, categoryId, roleId);
+        if (user != null)
+            roleId = user.getRoleId() != 1 ? user.getRoleId() - 1 : 1;
+        else
+            roleId = 2;
+        List<ProductDTO> productList = productDAO.searchProducts(name, origins, minPriceNum, maxPriceNum, categoryId,
+                roleId);
 
         // Đưa kết quả vào request để hiển thị trên JSP
         req.setAttribute("products", productList);

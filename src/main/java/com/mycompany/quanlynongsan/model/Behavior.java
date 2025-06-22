@@ -6,7 +6,7 @@ package com.mycompany.quanlynongsan.model;
 
 /**
  *
- * @author joyboy
+ * @author nghiem
  */
 public class Behavior {
     Integer behaviorId;
@@ -46,6 +46,4 @@ public class Behavior {
         this.description = description;
     }
 
-    
-    
 }

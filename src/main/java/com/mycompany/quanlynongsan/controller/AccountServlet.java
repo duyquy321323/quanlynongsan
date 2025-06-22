@@ -4,30 +4,31 @@
  */
 package com.mycompany.quanlynongsan.controller;
 
-import com.mycompany.quanlynongsan.model.Behavior;
+import java.io.IOException;
+import java.util.List;
+
 import com.mycompany.quanlynongsan.model.User;
 import com.mycompany.quanlynongsan.repository.BehaviorRepository;
 import com.mycompany.quanlynongsan.repository.UserRepository;
 import com.mycompany.quanlynongsan.response.UserWithRole;
+
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
-import java.io.IOException;
-import java.util.List;
 
 /**
  *
- * @author joyboy
+ * @author nghiem
  */
 
 @WebServlet(urlPatterns = "/secured/admin/account")
 public class AccountServlet extends HttpServlet {
 
     private UserRepository userRepository = new UserRepository();
-    
+
     private BehaviorRepository behaviorRepository = new BehaviorRepository();
 
     @Override
@@ -39,17 +40,16 @@ public class AccountServlet extends HttpServlet {
         if (roleIdParam != null && !roleIdParam.isBlank()) {
             try {
                 int roleId = Integer.parseInt(roleIdParam);
-                users = userRepository.findAllWithRole(roleId);  // Lấy theo role cụ thể
-                req.setAttribute("selectedRoleId", roleId);      // Để hiện trong dropdown chọn
+                users = userRepository.findAllWithRole(roleId); // Lấy theo role cụ thể
+                req.setAttribute("selectedRoleId", roleId); // Để hiện trong dropdown chọn
             } catch (NumberFormatException e) {
-                users = userRepository.findAllWithRole();       // Nếu lỗi parse, lấy tất cả
+                users = userRepository.findAllWithRole(); // Nếu lỗi parse, lấy tất cả
             }
         } else {
-            users = userRepository.findAllWithRole();           // Không có filter → lấy tất cả
+            users = userRepository.findAllWithRole(); // Không có filter → lấy tất cả
         }
 
         req.setAttribute("users", users);
         req.getRequestDispatcher("/admin/account.jsp").forward(req, resp);
     }
 }
-

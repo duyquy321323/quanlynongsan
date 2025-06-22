@@ -8,7 +8,7 @@ import java.util.Date;
 
 /**
  *
- * @author joyboy
+ * @author nghiem
  */
 public class ReturnRequest {
     private Integer returnRequestId;
@@ -22,7 +22,8 @@ public class ReturnRequest {
     public ReturnRequest() {
     }
 
-    public ReturnRequest(Integer returnRequestId, Integer orderId, Integer userId, String reason, String status, Date createdDate, Date resolvedDate) {
+    public ReturnRequest(Integer returnRequestId, Integer orderId, Integer userId, String reason, String status,
+            Date createdDate, Date resolvedDate) {
         this.returnRequestId = returnRequestId;
         this.orderId = orderId;
         this.userId = userId;
@@ -87,5 +88,5 @@ public class ReturnRequest {
     public void setResolvedDate(Date resolvedDate) {
         this.resolvedDate = resolvedDate;
     }
-    
+
 }
