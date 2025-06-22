@@ -31,6 +31,9 @@ public class MyOrderServlet extends HttpServlet{
         User user = (User) session.getAttribute("user");
         OrderProductRepository repo = new OrderProductRepository();
         List<OrderProductRepository.OrderSummary> orders = repo.getOrderSummariesByUserId(user.getUserId());
+        if(user.getRoleId() == 2){
+            orders = repo.getAllRelatedOrderSummariesByUserId(user.getUserId());
+        }
         req.setAttribute("orders", orders);
         req.getRequestDispatcher("/user/my-order.jsp").forward(req, resp);
     }

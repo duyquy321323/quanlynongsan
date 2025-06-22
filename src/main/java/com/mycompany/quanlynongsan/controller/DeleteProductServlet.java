@@ -4,8 +4,10 @@
  */
 package com.mycompany.quanlynongsan.controller;
 
+import com.mycompany.quanlynongsan.model.Behavior;
 import com.mycompany.quanlynongsan.model.Product;
 import com.mycompany.quanlynongsan.model.User;
+import com.mycompany.quanlynongsan.repository.BehaviorRepository;
 import com.mycompany.quanlynongsan.repository.ProductRepository;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -25,12 +27,16 @@ public class DeleteProductServlet extends HttpServlet{
     
     private ProductRepository productRepository = new ProductRepository();
 
+    private BehaviorRepository behaviorRepository = new BehaviorRepository();
+    
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         Integer idProduct = Integer.valueOf(req.getParameter("id"));
         productRepository.deleteProduct(idProduct);
         HttpSession session = req.getSession();
         User user = (User) session.getAttribute("user");
+        Behavior behavior = behaviorRepository.findByCode("DELETE_PRODUCT");
+                    behaviorRepository.insertLog(user.getUserId(), behavior.getBehaviorId());
         List<Product> products = productRepository.findByHolderId(user.getUserId());
         req.setAttribute("products", products);
         req.getRequestDispatcher("/user/my-product.jsp").forward(req, resp);

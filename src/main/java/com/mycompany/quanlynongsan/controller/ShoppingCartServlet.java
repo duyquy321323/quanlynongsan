@@ -5,8 +5,10 @@
 package com.mycompany.quanlynongsan.controller;
 
 import com.mycompany.quanlynongsan.dao.HasCartDAO;
-import com.mycompany.quanlynongsan.dto.CartSummary;
+import com.mycompany.quanlynongsan.model.Behavior;
+import com.mycompany.quanlynongsan.response.CartSummaryResponse;
 import com.mycompany.quanlynongsan.model.User;
+import com.mycompany.quanlynongsan.repository.BehaviorRepository;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -24,6 +26,8 @@ import java.io.IOException;
 public class ShoppingCartServlet extends HttpServlet {
     
     private HasCartDAO hasCartDAO = new HasCartDAO();
+    
+    private BehaviorRepository behaviorRepository = new BehaviorRepository();
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -33,10 +37,11 @@ public class ShoppingCartServlet extends HttpServlet {
         resp.setContentType("application/json");
         resp.setCharacterEncoding("UTF-8");
 
-        CartSummary summary = hasCartDAO.getCartSummary(user.getUserId());
+        CartSummaryResponse summary = hasCartDAO.getCartSummary(user.getUserId());
         
         req.setAttribute("summary", summary);
-        
+        Behavior behavior = behaviorRepository.findByCode("VIEW_CART");
+            behaviorRepository.insertLog(user.getUserId(), behavior.getBehaviorId());
         req.getRequestDispatcher("/user/shopping-cart.jsp").forward(req, resp);
     }
     
@@ -55,10 +60,11 @@ public class ShoppingCartServlet extends HttpServlet {
                 int productId = Integer.parseInt(productIdParam);
                 hasCartDAO.removeProductFromCart(user.getUserId(), productId);
 
-                CartSummary summary = hasCartDAO.getCartSummary(user.getUserId());
+                CartSummaryResponse summary = hasCartDAO.getCartSummary(user.getUserId());
         
                 req.setAttribute("summary", summary);
-
+                Behavior behavior = behaviorRepository.findByCode("REMOVE_FROM_CART");
+            behaviorRepository.insertLog(user.getUserId(), behavior.getBehaviorId());
                 req.getRequestDispatcher("/user/shopping-cart.jsp").forward(req, resp);
             } catch (NumberFormatException e) {
                 resp.sendError(HttpServletResponse.SC_BAD_REQUEST, "Invalid productId");

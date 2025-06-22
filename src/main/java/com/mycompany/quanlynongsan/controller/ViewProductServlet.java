@@ -34,10 +34,10 @@ public class ViewProductServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         int productId = Integer.parseInt(req.getParameter("id"));
-        Product product = productRepository.findById(productId); // lấy sản phẩm
+        Product product = productRepository.findByIdNonIsBrowseNonIsSell(productId); // lấy sản phẩm
         List<com.mycompany.quanlynongsan.model.Category> allCategories = categoryRepository.findAll(); // lấy toàn bộ danh mục
         List<com.mycompany.quanlynongsan.model.Category> selectedCategoryIds = categoryRepository.findCategoriesByProductId(productId); // lấy danh mục đã chọn
-        List<ImageProduct> imageProducts = imageProductRepository.findAllByProductId(productId);
+        List<ImageProduct> imageProducts = imageProductRepository.findByProductId(productId);
 
         req.setAttribute("product", product);
         req.setAttribute("allCategories", allCategories);

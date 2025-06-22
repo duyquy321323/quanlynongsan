@@ -7,9 +7,11 @@ package com.mycompany.quanlynongsan.controller;
 import com.cloudinary.Cloudinary;
 import com.cloudinary.utils.ObjectUtils;
 import com.mycompany.quanlynongsan.config.CloudinaryConfig;
+import com.mycompany.quanlynongsan.model.Behavior;
 import com.mycompany.quanlynongsan.model.ImageProduct;
 import com.mycompany.quanlynongsan.model.Product;
 import com.mycompany.quanlynongsan.model.User;
+import com.mycompany.quanlynongsan.repository.BehaviorRepository;
 import com.mycompany.quanlynongsan.repository.CategoryRepository;
 import com.mycompany.quanlynongsan.repository.ImageProductRepository;
 import com.mycompany.quanlynongsan.repository.ProductRepository;
@@ -47,13 +49,15 @@ public class EditProductServlet extends HttpServlet {
     
     private ImageProductRepository imageProductRepository = new ImageProductRepository();
     
+    private BehaviorRepository behaviorRepository = new BehaviorRepository();
+    
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         int productId = Integer.parseInt(req.getParameter("id"));
-        Product product = productRepository.findById(productId); // lấy sản phẩm
+        Product product = productRepository.findByIdNonIsBrowseNonIsSell(productId); // lấy sản phẩm
         List<com.mycompany.quanlynongsan.model.Category> allCategories = categoryRepository.findAll(); // lấy toàn bộ danh mục
         List<com.mycompany.quanlynongsan.model.Category> selectedCategoryIds = categoryRepository.findCategoriesByProductId(productId); // lấy danh mục đã chọn
-        List<ImageProduct> imageProducts = imageProductRepository.findAllByProductId(productId);
+        List<ImageProduct> imageProducts = imageProductRepository.findByProductId(productId);
 
         req.setAttribute("product", product);
         req.setAttribute("allCategories", allCategories);
@@ -82,7 +86,7 @@ public class EditProductServlet extends HttpServlet {
                 String status = req.getParameter("status");
                 Boolean isSell = Boolean.parseBoolean(req.getParameter("is_sell"));
                 Boolean isBrowse = Boolean.parseBoolean(req.getParameter("is_browse"));
-                String placeOfManufacture = req.getParameter("placeOfManufacture");
+                String placeOfManufacture = req.getParameter("place_of_manufacture");
                 String[] categoryIdsParam = req.getParameterValues("category_ids");
                 Integer productId = Integer.valueOf(req.getParameter("product_id"));
                 Integer[] categories = null;
@@ -137,9 +141,15 @@ public class EditProductServlet extends HttpServlet {
                 // 3. Lưu vào database
                 ProductRepository repo = new ProductRepository();
                 boolean success = repo.update(product, imageUrls, categories);
+                String backUrl = req.getContextPath() + "/secured/user/my-products";
+                if(user.getRoleId() == 2){
+                    backUrl = req.getContextPath() + "/secured/user/my-stock";
+                }
 
                 if (success) {
-                    resp.sendRedirect(req.getContextPath() + "/secured/user/my-products"); // Ví dụ chuyển hướng về trang danh sách sản phẩm
+                    Behavior behavior = behaviorRepository.findByCode("EDIT_PRODUCT");
+                    behaviorRepository.insertLog(user.getUserId(), behavior.getBehaviorId());
+                    resp.sendRedirect(backUrl); // Ví dụ chuyển hướng về trang danh sách sản phẩm
                 } else {
                     req.setAttribute("error", "Failed to create product.");
                     req.getRequestDispatcher("/error.jsp").forward(req, resp);

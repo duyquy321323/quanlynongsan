@@ -4,11 +4,13 @@
  */
 package com.mycompany.quanlynongsan.controller;
 
+import com.mycompany.quanlynongsan.model.User;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import java.io.IOException;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
@@ -33,6 +35,12 @@ import org.apache.commons.codec.binary.Hex;
 @WebServlet(urlPatterns = "/secured/checkout")
 public class CheckOut extends HttpServlet{
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        HttpSession session = request.getSession();
+        User user = (User) session.getAttribute("user");
+        if (user.getPhoneNumber() == null || user.getAddress() == null || user.getFullName() == null) {
+            response.sendRedirect(request.getContextPath() + "/secured/user/shopping-cart?incompleteProfile=true");
+            return;
+        }
         String orderType = "other";
         String vnp_TxnRef = getRandomNumber(8);
         String vnp_IpAddr = "127.0.0.1";

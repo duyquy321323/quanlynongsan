@@ -4,7 +4,9 @@
  */
 package com.mycompany.quanlynongsan.dao;
 
+import com.mycompany.quanlynongsan.model.Behavior;
 import com.mycompany.quanlynongsan.model.User;
+import com.mycompany.quanlynongsan.repository.BehaviorRepository;
 import com.mycompany.quanlynongsan.repository.UserRepository;
 import com.mycompany.quanlynongsan.request.RegisterRequest;
 import jakarta.servlet.http.HttpServletRequest;
@@ -18,6 +20,8 @@ import org.mindrot.jbcrypt.BCrypt;
  */
 public class UserDAO {
     final private UserRepository userRepository = new UserRepository();
+    
+    private BehaviorRepository behaviorRepository = new BehaviorRepository();
     
     public boolean register(RegisterRequest request) {
         User user = userRepository.findByEmail(request.getEmail());
@@ -38,9 +42,13 @@ public class UserDAO {
                 HttpSession session = req.getSession();
                 session.setAttribute("user", user);
                 session.setMaxInactiveInterval(30 * 60); // Session hết hạn sau 30 phút (tính bằng giây)
+                Behavior behavior = behaviorRepository.findByCode("LOGIN");
+            behaviorRepository.insertLog(user.getUserId(), behavior.getBehaviorId());
                 return true;
             }
         }
+         Behavior behavior = behaviorRepository.findByCode("LOGIN_FAILED");
+            behaviorRepository.insertLog(user.getUserId(), behavior.getBehaviorId());
         return false;
     }
     

@@ -7,8 +7,10 @@ package com.mycompany.quanlynongsan.controller;
 import com.cloudinary.Cloudinary;
 import com.cloudinary.utils.ObjectUtils;
 import com.mycompany.quanlynongsan.config.CloudinaryConfig;
+import com.mycompany.quanlynongsan.model.Behavior;
 import com.mycompany.quanlynongsan.model.Product;
 import com.mycompany.quanlynongsan.model.User;
+import com.mycompany.quanlynongsan.repository.BehaviorRepository;
 import com.mycompany.quanlynongsan.repository.ProductRepository;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.MultipartConfig;
@@ -37,6 +39,8 @@ import java.util.Map;
 @MultipartConfig
 @WebServlet(urlPatterns = "/secured/user/sell-product")
 public class SellProductServlet extends HttpServlet {
+    
+    private BehaviorRepository behaviorRepository = new BehaviorRepository();
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -61,7 +65,7 @@ public class SellProductServlet extends HttpServlet {
                 String status = req.getParameter("status");
                 Boolean isSell = Boolean.parseBoolean(req.getParameter("is_sell"));
                 Boolean isBrowse = Boolean.parseBoolean(req.getParameter("is_browse"));
-                String placeOfManufacture = req.getParameter("placeOfManufacture");
+                String placeOfManufacture = req.getParameter("place_of_manufacture");
                 String[] categoryIdsParam = req.getParameterValues("category_ids");
                 Integer[] categories = null;
 
@@ -117,6 +121,8 @@ public class SellProductServlet extends HttpServlet {
                 boolean success = repo.add(product, imageUrls, categories);
 
                 if (success) {
+        Behavior behavior = behaviorRepository.findByCode("CREATE_PRODUCT");
+            behaviorRepository.insertLog(user.getUserId(), behavior.getBehaviorId());
                     resp.sendRedirect(req.getContextPath() + "/secured/user/my-products"); // Ví dụ chuyển hướng về trang danh sách sản phẩm
                 } else {
                     req.setAttribute("error", "Failed to create product.");

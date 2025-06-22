@@ -24,6 +24,7 @@ public class CategoryRepository {
     
     final private String FIND_CATEGORY_BY_PRODUCT_ID = "SELECT c.category_id, c.name FROM CATEGORY c JOIN PRODUCT_CATEGORY pc ON c.category_id = pc.category_id WHERE pc.product_id = ?";
 
+    final private String FIND_BY_ID = "SELECT * FROM CATEGORY WHERE category_id = ?";
 
     public CategoryRepository() {
     }
@@ -60,5 +61,21 @@ public class CategoryRepository {
             ex.printStackTrace();
         }
         return categories;
+    }
+    
+    public Category findById(int categoryId) {
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(FIND_BY_ID)) {
+
+            stmt.setInt(1, categoryId);
+            ResultSet rs = stmt.executeQuery();
+
+            if (rs.next()) {
+                return new Category(rs.getInt("category_id"), rs.getString("name"));
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        return null; // Không tìm thấy trả về null
     }
 }
